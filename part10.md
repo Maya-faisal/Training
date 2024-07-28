@@ -1,3 +1,5 @@
+# part10
+
 * install mariadb mariadb-server 
   > 
 
@@ -28,3 +30,10 @@
   ![image](https://github.com/user-attachments/assets/90922d31-4e51-4006-a911-68728284c6b4)
 
  
+**To make queries remotely we need to dp the following**
+<br />
+* create a new user 
+  >CREATE USER 'maya'@'localhost' IDENTIFIED BY '123';
+
+*Grant remote privileges with GRANT
+ > GRANT ALL PRIVILEGES ON *.* TO 'maya'@'10.0.2.15' IDENTIFIED BY '123'
