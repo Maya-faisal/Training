@@ -11,7 +11,7 @@
   > sudo passwd user1
 
 * change "user1" to a non-interactive shell
-  > usermod user1 -s -/sbin/nologin
+  > usermod user1 -s /sbin/nologin
 
 ## 2.2
 * create a new group "TrainingGroup"
