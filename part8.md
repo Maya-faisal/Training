@@ -18,13 +18,12 @@
 * reload the firewall
   > firewall-cmd --reload
 
+
 > [!NOTE]
 > changes are made to the default zone, which is "public" by firewall-cmd --get-default-zone 
 
 
-* This part can br done also using the iptables as following:
-
-* first, check the status of the iptables
+* This part can be done also using the iptables. first, check the status of the iptables
   > systemctl status iptables
 
 * Add an Entry to the INPUT chain to handle the incoming packets, and Accept packets from port 80 and 443
