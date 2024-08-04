@@ -11,7 +11,7 @@
 
 * open port 80 and 443, using the firewall-cmd, and make the changes permanent using --parmanent 
 
-  > firewall-cmd --permanent --add-port 80 
+  > firewall-cmd --permanent --add-port 80 <br />
   > firewall-cmd --permanent --add-port 443
 
 
