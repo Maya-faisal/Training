@@ -26,7 +26,7 @@
 
 * Add the mounting Entry to fstab file 
   > vi /etc/fstab <br />
-  > UID= UUID="db81e709-a6e7-4a3a-8662-c2da42a1db2c" /mnt/data ext4 defaults 1 2 
+  > UUID=db81e709-a6e7-4a3a-8662-c2da42a1db2c /mnt/data ext4 defaults 1 2 
 
 * Run mount -a to mount all the file systems in /etc/fstab, including the entry just added
   > mount -a
