@@ -36,4 +36,4 @@
   > CREATE USER 'maya'@'localhost' IDENTIFIED BY '123';
 
 * Grant remote privileges with GRANT
-  > GRANT ALL PRIVILEGES ON *.* TO 'maya'@'10.0.2.15' IDENTIFIED BY '123'
+  > GRANT ALL PRIVILEGES ON *.* TO 'maya'@'10.10.10.57' IDENTIFIED BY '123'
