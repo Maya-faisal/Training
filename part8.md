@@ -36,6 +36,6 @@
 ## 8.2
 
 * to Block ssh connection for your colleague ip to the VM, you need his ip , and add the following rule to the iptables
-  > iptables -I INPUT -p tcp --dport 22  --source <ip> -j REJECT
+  > iptables -I INPUT -p tcp --dport 22  --source ip -j REJECT
 
 
