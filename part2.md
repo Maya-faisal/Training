@@ -34,4 +34,6 @@
   > usermod -aG AdminGroup user2 user3
 
 * give user3 root permissions
-  > usermod -aG wheel user3
+  > usermod -aG wheel user3 <br />
+  
+**Members of the wheel group exercise the administrative privileges of root with less potential for damaging the system**
