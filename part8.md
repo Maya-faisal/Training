@@ -27,7 +27,7 @@
   > systemctl status iptables
 
 * Add an Entry to the INPUT chain to handle the incoming packets, and Accept packets from port 80 and 443
-  > iptables -I INPUT -p tcp --dport 80 -j ACCEPT 
+  > iptables -I INPUT -p tcp --dport 80 -j ACCEPT <br/>
   > iptables -I INPUT -p tcp --dport 443 -j ACCEPT
 
 * make the changes pemanent by saving the changes to the iptables configuration file
@@ -36,6 +36,7 @@
 ## 8.2
 
 * to Block ssh connection for your colleague ip to the VM, you need his ip , and add the following rule to the iptables
+  
   > iptables -I INPUT -p tcp --dport 22  --source ip -j REJECT
 
 
