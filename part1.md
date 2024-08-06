@@ -21,7 +21,7 @@
   > mkfs.ext4 /dev/vg1/lvm3
 
 * Get the UID of the lvm, and make the mount point directory
-  > blkid /dev/vg1/lvm3
+  > blkid /dev/vg1/lvm3 <br />
   > mkdir -p /mnt/data
 
 * Add the mounting Entry to fstab file 
