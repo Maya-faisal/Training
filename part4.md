@@ -8,3 +8,5 @@
 
 * apply ACL to prevent user2 from reading, writing and executing
   > setacfl -m u:user2:- /var/tmp/fstab
+
+**use ACLs for customized permissions**
