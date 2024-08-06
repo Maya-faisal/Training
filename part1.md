@@ -11,7 +11,7 @@
   <br />
 
 * divide the volume group into a logical volume, each is 50 extents
-  > pvcreate -n lvm3 -l 50 vg1
+  > lvcreate -n lvm3 -l 50 vg1
 
   **-l  Gives the number of logical extents to allocate for the new logical volume** <br />
   **-n  Sets the name for the new logical volume**
