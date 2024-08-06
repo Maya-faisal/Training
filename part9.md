@@ -1,9 +1,13 @@
 # part9
 
 * create a script that collect the users logged in and save them in a file Format : timestamp – users
-  
-  ![Capture4](https://github.com/user-attachments/assets/91c4235a-55c4-4b96-9067-74dcc804833e)
-
+  > #!/bin/bash <br/>
+  > who | while read -r user tty date time _; do <br />
+  >  if [ -n "$user" ]; then <br />
+  >   LOGIN_TIME="$date $time" <br/>
+  >   echo "$LOGIN_TIME – $user" >> user_log_file.txt <br/>
+  >  fi <br/>
+  > done <br />
 
 * make sure to make the script file execuatble 
   > chmod +x /tmp/part9.sh 
