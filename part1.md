@@ -24,7 +24,7 @@
   > blkid /dev/vg1/lvm3 <br />
   > mkdir -p /mnt/data
 
-* Add the mounting Entry to fstab file 
+* Add the mounting Entry to fstab file, to mount automatically when reboot
   > vi /etc/fstab <br />
   > UUID=db81e709-a6e7-4a3a-8662-c2da42a1db2c /mnt/data ext4 defaults 1 2 
 
