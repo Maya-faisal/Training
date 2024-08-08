@@ -1,0 +1,177 @@
+#!/bin/bash
+set +x
+
+function calculate1AVG()
+{
+
+   count=0
+   total=0
+   average=0
+
+   take5files=0
+
+   data=""
+
+   TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')
+
+   for f in ./$1*.txt; do
+
+      # Read each line in the file
+      while read -r value; do
+         total=$(echo "$total + $value" | bc)
+         ((count++))
+         time=$(echo $f | awk -F'_' '{print $4 "\t" $5}')
+         data+="&nbsp;$value &nbsp;  &nbsp; &nbsp; $time<br>"
+      done < "$f"
+
+   done
+
+      # Calculate the average
+      if [ $count -ne 0 ]; then
+          average=$(echo "scale=2; $total / $count" | bc)
+          echo "$average" >> /Task2/cAVG.txt
+
+      else
+          echo "No values to average."
+      fi
+}
+
+
+function calculate2AVG() {
+  totalfree=0
+  totalused=0
+  count=0
+  freeavg=0
+  usedavg=0
+  data2=""
+
+  for ff in ./$1*.txt; do
+     while read -r value; do
+           totalfree=$(echo "$totalfree + $(echo "$value" | awk -F' ' '{print $1}')" | bc)
+           totalused=$(echo "$totalused + $(echo "$value" | awk -F' ' '{print $2}')" | bc)
+           ((count++))
+           time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
+           data2+="  $value &ensp;  $time<br>"
+
+      done < "$ff"
+  done
+
+     if [ $count -ne 0 ]; then
+        freeavg=$(echo "scale=2; $totalfree / $count" | bc)
+        usedavg=$(echo "scale=2; $totalused / $count" | bc)
+        echo "$freeavg $usedavg" >> /Task2/mAVG.txt
+
+
+     else
+        echo "No values to average"
+
+     fi
+
+}
+
+
+function calculate3AVG()
+{
+  data3=""
+
+  for fff in ./$1*.txt; do
+      while read -r value; do
+         data3+=$(echo "$value" | awk -F' ' '{print $2 "   "}')
+       #  data3+= "\<br\>"
+      done < "$fff"
+   done
+
+   echo $data3
+}
+
+calculate1AVG cpu
+
+calculate2AVG memory
+
+calculate3AVG disk
+
+cat << EOF > /var/www/html/cpu.html
+
+  <body style="background-color:powderblue;">
+  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
+  <h2 style="font-family:verdana; text-align:center;" > CPU statistics <h2>
+
+  <h2> Average CPU Utilization = $average taken at $TIMESTAMP <h2>
+  <h2> Collected data : <h2>
+  <h2> Value &nbsp; TimeStamp <h2>
+  <h3> ${data} <h3>
+  </body>
+
+EOF
+
+
+
+cat << EOF > /var/www/html/memory.html
+
+  <body style="background-color:powderblue;">
+  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
+  <h2 style="font-family:verdana; text-align:center;" > Memory statistics <h2>
+
+  <h2> Average Used Memory  = $usedavg taken at $TIMESTAMP <h2>
+  <h2> Average Free Memory  = $freeavg taken at $TIMESTAMP <h2>
+  <h2> Collected data : <h2>
+  <h2> &nbsp; F &ensp; U &ensp; TimeStamp <h2>
+  <h3> ${data2} <h3>
+  </body>
+
+EOF
+
+
+
+cat << EOF > /var/www/html/disk.html
+
+  <body style="background-color:powderblue;">
+  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
+  <h2 style="font-family:verdana; text-align:center;" > Disk statistics <h2>
+
+  <h2> Average Used Disk  = $usedDavg taken at $TIMESTAMP <h2>
+  <h2> Average Free Disk  = $freeDavg taken at $TIMESTAMP <h2>
+  <h2> Collected data : <h2>
+  <h2> &nbsp; F &ensp; U &ensp; TimeStamp <h2>
+  <h3> ${data3} <h3>
+  </body>
+
+EOF
+
+
+
+
+
+
+---------------------------------------------
+
+
+
+#!/bin/bash
+# This script monitors CPU, Memory and Disk usage
+
+ # for debugging
+ set +x
+
+ # get the the timestamp
+ TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')
+
+  # Get the current usage of each item
+  cpuUsage=$(top -bn1 | awk '/Cpu/{print $2}')
+  memUsage=$(free -m  | awk '/Mem/{print $3}')
+  freeMem=$(free -m   | awk '/Mem/{print $4}')
+
+
+
+lsblk -l -o NAME,MOUNTPOINT -n | while read name mount; do
+  if [[ -n "$mount" && "$mount" != "[SWAP]" ]]; then
+    df -h "$mount" | tail -n +2 | awk -v name="$name" '{print name " " $3" " $4}' >> /Task2/disk_usage_at_${TIMESTAMP}_.txt
+  fi
+done
+
+
+
+  # store each item data in a file named with the item name and the timestamp
+  echo "$cpuUsage" >> /Task2/cpu_usage_at_${TIMESTAMP}_.txt
+
+  echo "$freeMem $memUsage" >> /Task2/memory_usage_at_${TIMESTAMP}_.txt
