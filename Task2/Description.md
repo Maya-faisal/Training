@@ -5,7 +5,7 @@
       > cpuUsage=$(top -bn1 | awk '/Cpu/{print $2}')
 
       **top: shows real-time information about the system's processes** <br/>
-      **-b to run in bash mode,meaning it will output the information once and then exit, instead of continuously updating the display** <br/>
+      **-b to run in bash mode, meaning it will output the information once and then exit, instead of continuously updating the display** <br/>
       **-n  specifies the number of iterations or updates that top should perform before exiting** <br/>
 
  2. Memory Usage and Free Memory
@@ -17,7 +17,7 @@
      **-m in Megabytes** <br/>
  
   3. Disk  Usage and Free Disk
-     A script was written to extract the needed disk and partition data as following:
+     A script was written to extract the needed disk and partition data as follows:
 
   4. Get the TimeStamp
      
@@ -30,14 +30,14 @@
 
      <br/>
      
-# Write a script that calculates the Average of the collected data from cronejob 1, and sends that data to the HTML file , as cronjob 2
+# Write a script that calculates the Average of the collected data from cronjob 1, and sends that data to the HTML file, as cronjob 2
 
- write 3 functions, each iterate through the output files from cronjob1 and calculate the average according to the item format. <br/>
+ write 3 functions, each iterate through the output files from cronjob1, and calculate the average according to the item format. <br/>
  __Cpu file contains only one value. <br/>__
  __Memory file contains data formatted as following: freeMemory_UsedMemory <br/>__
- __Disk file contains data formatted as following: disk/partition name_used_avaliable <br/>__
+ __Disk file contains data formatted as follows: disk/partition name_used_avaliable <br/>__
 
- From each function there is a data output, that is send to the HTML elements to be viewed in the web page
+ From each function, there is a data output, that is sent to the HTML elements to be viewed on the web page
  
  ![image](https://github.com/user-attachments/assets/ea5b2d8f-1bc9-4258-afb9-06283e106646)
 
@@ -50,7 +50,15 @@
 
 # Create index.html as the main page for the Web page
 
-  **create the index.html in var/www/html and add 3 links, each link should direct to a page that displays the average and a list of all the collected item data along with the timestamp** <br/>
+  **Create the index.html in var/www/html and add 3 links, each link should direct to a page that displays the average and a list of all the collected item data along with the timestamp** <br/>
+
+
+# create the cronJobs
+
+**create cronjob1 and cronjob2 and make them run every hour** <br/>
+  > crontab -e <br/>
+  > 0 * * * * bash Task2/task2.sh && Task2/avg.sh <br/>
+
 
 
 
