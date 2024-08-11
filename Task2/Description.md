@@ -19,7 +19,7 @@
   3. Disk  Usage and Free Disk
      A script was written to extract the needed disk and partition data as follows:
 
-     ![image](https://github.com/user-attachments/assets/5ca3adc4-b341-4115-b6aa-8db5f8fe37b2)
+![image](https://github.com/user-attachments/assets/91d71a63-85af-4a2d-b1a4-05d3f5c08f3b)
 
 
   5. Get the TimeStamp
@@ -37,8 +37,8 @@
 
  write 3 functions, each iterate through the output files from cronjob1, and calculate the average according to the item format. <br/>
  __Cpu file contains only one value. <br/>__
- __Memory file contains data formatted as following: freeMemory_UsedMemory <br/>__
- __Disk file contains data formatted as follows: disk/partition name_used_avaliable <br/>__
+ __Memory file contains data formatted as following: freeMemory UsedMemory <br/>__
+ __Disk file contains data formatted as follows: disk/partition used avaliable <br/>__
 
  From each function, there is a data output, that is sent to the HTML elements to be viewed on the web page
  
@@ -58,12 +58,12 @@
   ![image](https://github.com/user-attachments/assets/bea7b81a-e36b-4163-a021-a3698752a172)
 
 
-
 # create the cronJobs
 
 **create cronjob1 and cronjob2 and make them run every hour** <br/>
   > crontab -e <br/>
-  > 0 * * * * bash Task2/task2.sh && Task2/avg.sh <br/>
+  > 0 * * * * bash Task2/task2.sh <br/>
+  > 0 * * * * bash Task2/avg.sh 
 
 
 
