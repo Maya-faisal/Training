@@ -19,11 +19,14 @@
   3. Disk  Usage and Free Disk
      A script was written to extract the needed disk and partition data as follows:
 
-  4. Get the TimeStamp
+     ![image](https://github.com/user-attachments/assets/5ca3adc4-b341-4115-b6aa-8db5f8fe37b2)
+
+
+  5. Get the TimeStamp
      
      >  TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')   
 
-  5. store each item data in a file named with the item name and the timestamp
+  6. store each item data in a file named with the item name and the timestamp
      
      > echo "$cpuUsage" >> /Task2/cpu_usage_at_${TIMESTAMP}_.txt  <br/>
      > echo "$freeMem $memUsage" >> /Task2/memory_usage_at_${TIMESTAMP}_.txt
