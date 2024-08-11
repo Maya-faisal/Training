@@ -124,6 +124,7 @@ calculate3AVG disk
 
 cat << EOF > /var/www/html/cpu.html
 
+  <title>CPU</title>
   <body style="background-color:powderblue;">
   <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
   <h2 style="font-family:verdana; text-align:center;" > CPU statistics <h2>
@@ -137,9 +138,9 @@ cat << EOF > /var/www/html/cpu.html
 EOF
 
 
-
 cat << EOF > /var/www/html/memory.html
 
+  <title>Memory</title>
   <body style="background-color:powderblue;">
   <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
   <h2 style="font-family:verdana; text-align:center;" > Memory statistics <h2>
@@ -154,9 +155,9 @@ cat << EOF > /var/www/html/memory.html
 EOF
 
 
-
 cat << EOF > /var/www/html/disk.html
 
+  <title>Disk</title>
   <body style="background-color:powderblue;">
   <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
   <h2 style="font-family:verdana; text-align:center;" > Disk statistics <h2>
@@ -168,4 +169,3 @@ cat << EOF > /var/www/html/disk.html
   </body>
 
 EOF
-
