@@ -3,85 +3,112 @@ set +x
 
 function calculate1AVG()
 {
-
-   count=0
-   total=0
-   average=0
-
-   take5files=0
-
    data=""
 
    TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')
 
-   for f in ./$1*.txt; do
+   for f in /Task2/$1*.txt; do
 
       # Read each line in the file
       while read -r value; do
-         total=$(echo "$total + $value" | bc)
-         ((count++))
          time=$(echo $f | awk -F'_' '{print $4 "\t" $5}')
          data+="&nbsp;$value &nbsp;  &nbsp; &nbsp; $time<br>"
       done < "$f"
-
    done
 
-      # Calculate the average
-      if [ $count -ne 0 ]; then
-          average=$(echo "scale=2; $total / $count" | bc)
-          echo "$average" >> /Task2/cAVG.txt
+     sum=0
+     count=0
 
-      else
-          echo "No values to average."
-      fi
+     files=$(ls -1t | grep "$1" | tail -n 5)
+
+     for f in $files; do
+         while read -r value; do
+            sum=$(awk -v sum="$sum" -v value="$value" 'BEGIN {print sum + value}')
+            count=$((count + 1))
+            done < "$f"
+     done
+
+    if [ $count -ne 0 ]; then
+        average=$(awk -v sum="$sum" -v count="$count" 'BEGIN {print sum / count}')
+    else
+        average=0
+    fi
+
+
+
 }
 
 
 function calculate2AVG() {
-  totalfree=0
-  totalused=0
-  count=0
+
   freeavg=0
   usedavg=0
   data2=""
 
-  for ff in ./$1*.txt; do
-     while read -r value; do
-           totalfree=$(echo "$totalfree + $(echo "$value" | awk -F' ' '{print $1}')" | bc)
-           totalused=$(echo "$totalused + $(echo "$value" | awk -F' ' '{print $2}')" | bc)
-           ((count++))
-           time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
-           data2+="  $value &ensp;  $time<br>"
 
+  for ff in /Task2/$1*.txt; do
+     while read -r free1 used1; do
+           time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
+           data2+="  $free1  &ensp; $used1 &ensp; $time<br>"
       done < "$ff"
   done
 
-     if [ $count -ne 0 ]; then
-        freeavg=$(echo "scale=2; $totalfree / $count" | bc)
-        usedavg=$(echo "scale=2; $totalused / $count" | bc)
-        echo "$freeavg $usedavg" >> /Task2/mAVG.txt
+   files=$(ls -1t | grep "$1" | tail -n 5)
+      for ff in $files; do
+        sumfree=0
+        sumused=0
+        count=0
+        while read -r free used; do
+           sumfree=$(awk -v sum1="$sumfree" -v value1="$free" 'BEGIN {print sum1 + value1}')
+           sumused=$(awk -v sum2="$sumused" -v value2="$used" 'BEGIN {print sum2 + value2}')
+           count=$((count + 1))
+         done < "$ff"
+      done
 
+    if [ $count -ne 0 ]; then
+        freeavg=$(awk -v sum1="$sumfree" -v count="$count" 'BEGIN {print sum1 / count}')
+        usedavg=$(awk -v sum2="$sumused" -v count="$count" 'BEGIN {print sum2 / count}')
 
-     else
-        echo "No values to average"
-
-     fi
-
+    else
+        freeavg=0
+        usedavg=0
+    fi
 }
 
 
 function calculate3AVG()
 {
-  data3=""
+  # Initialize associative arrays to hold the sum and count for each disk
+   declare -A free_sum
+   declare -A available_sum
+   declare -A count
 
-  for fff in ./$1*.txt; do
-      while read -r value; do
-         data3+=$(echo "$value" | awk -F' ' '{print $2 "   "}')
-       #  data3+= "\<br\>"
+   data3=""
+
+  # Iterate over files
+  for fff in /Task2/$1*.txt; do
+      while read -r disk free available; do
+          # Add the values to the corresponding disk's sum and increase the count
+          free1=$(echo $free | tr -d 'M')
+          available1=$(echo $available | tr -d 'M')
+          free_sum[$disk]=$((${free_sum[$disk]:-0} + $free1))
+          available_sum[$disk]=$((${available_sum[$disk]:-0} + $available1))
+          count[$disk]=$((${count[$disk]:-0} + 1))
+          time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
+          data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp;  &emsp; &emsp;  $available &emsp; &emsp;  &emsp;  &emsp; $time  <br>"
       done < "$fff"
-   done
+  done
 
-   echo $data3
+  data3AVG=""
+
+  for disk in "${!free_sum[@]}"; do
+      avg_free=$(echo "${free_sum[$disk]} / ${count[$disk]}" | bc)
+      avg_available=$(echo "${available_sum[$disk]} / ${count[$disk]}" | bc)
+      echo "$disk $avg_free $avg_available" >> /Task2/dAVG.txt
+      data3AVG+="Disk $disk Free space average = $avg_free M and Average used space = $avg_available M taken at $time <br>"
+
+  done
+
 }
 
 calculate1AVG cpu
@@ -115,7 +142,7 @@ cat << EOF > /var/www/html/memory.html
   <h2> Average Used Memory  = $usedavg taken at $TIMESTAMP <h2>
   <h2> Average Free Memory  = $freeavg taken at $TIMESTAMP <h2>
   <h2> Collected data : <h2>
-  <h2> &nbsp; F &ensp; U &ensp; TimeStamp <h2>
+  <h2> &nbsp; Free &ensp; Used  &ensp; TimeStamp <h2>
   <h3> ${data2} <h3>
   </body>
 
@@ -129,10 +156,9 @@ cat << EOF > /var/www/html/disk.html
   <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
   <h2 style="font-family:verdana; text-align:center;" > Disk statistics <h2>
 
-  <h2> Average Used Disk  = $usedDavg taken at $TIMESTAMP <h2>
-  <h2> Average Free Disk  = $freeDavg taken at $TIMESTAMP <h2>
+  <h2> $data3AVG <h2>
   <h2> Collected data : <h2>
-  <h2> &nbsp; F &ensp; U &ensp; TimeStamp <h2>
+  <h2> &nbsp; DiskName &emsp;  AverageFree &emsp;  AverageUsed &emsp;  TimeStamp  <h2>
   <h3> ${data3} <h3>
   </body>
 
