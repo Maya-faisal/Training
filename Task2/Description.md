@@ -40,7 +40,20 @@
  __Memory file contains data formatted as following: freeMemory UsedMemory <br/>__
  __Disk file contains data formatted as follows: disk/partition used avaliable <br/>__
 
- From each function, there is a data output, that is sent to the HTML elements to be viewed on the web page
+ **Take the Average of the last 5 files** 
+   > files=$(ls -1t | grep "$1" | tail -n 5)
+
+**calculate the AVG using awk**
+
+ ![image](https://github.com/user-attachments/assets/aa542ef8-31ea-4337-a0aa-96ac79f98294)
+ 
+
+**iterate through all files to get the data and send it to HTML** 
+
+ ![image](https://github.com/user-attachments/assets/a01dc1fd-0805-4fcb-a126-9bca2531eef6)
+
+
+ **From each function, there is a data output, that is sent to the HTML elements to be viewed on the web page**
  
  ![image](https://github.com/user-attachments/assets/ea5b2d8f-1bc9-4258-afb9-06283e106646)
 
