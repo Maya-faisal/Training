@@ -55,6 +55,9 @@
 
   **Create the index.html in var/www/html and add 3 links, each link should direct to a page that displays the average and a list of all the collected item data along with the timestamp** <br/>
 
+  ![image](https://github.com/user-attachments/assets/bea7b81a-e36b-4163-a021-a3698752a172)
+
+
 
 # create the cronJobs
 
