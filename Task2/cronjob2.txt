@@ -1,3 +1,4 @@
+
 #!/bin/bash
 set +x
 
@@ -34,6 +35,7 @@ function calculate1AVG()
         average=0
     fi
 
+    echo "$average $TIMESTAMP" >> /Task2/cAVG.txt
 
 
 }
@@ -73,6 +75,9 @@ function calculate2AVG() {
         freeavg=0
         usedavg=0
     fi
+
+    echo "$freeavg $usedavg $TIMESTAMP" $ >> /Task2/MAVG.txt
+
 }
 
 
@@ -104,7 +109,7 @@ function calculate3AVG()
   for disk in "${!free_sum[@]}"; do
       avg_free=$(echo "${free_sum[$disk]} / ${count[$disk]}" | bc)
       avg_available=$(echo "${available_sum[$disk]} / ${count[$disk]}" | bc)
-      echo "$disk $avg_free $avg_available" >> /Task2/dAVG.txt
+      echo "$disk $avg_free $avg_available $TIMESTAMP" >> /Task2/dAVG.txt
       data3AVG+="Disk $disk Free space average = $avg_free M and Average used space = $avg_available M taken at $time <br>"
 
   done
@@ -163,3 +168,4 @@ cat << EOF > /var/www/html/disk.html
   </body>
 
 EOF
+
