@@ -2,14 +2,16 @@
 #!/bin/bash
 set +x
 
+cd /Task2/ || exit
+
 function calculate1AVG()
 {
    data=""
 
    TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')
 
-   for f in /Task2/$1*.txt; do
-
+   files=$(ls -1t | grep "$1")
+   for f in $files; do
       # Read each line in the files and send data to HTML
       while read -r value; do
          time=$(echo $f | awk -F'_' '{print $4 "\t" $5}')
@@ -30,7 +32,7 @@ function calculate1AVG()
             done < "$f"
      done
 
-    if [ $count -ne 0 ]; then
+   if [ $count -ne 0 ]; then
         average=$(awk -v sum="$sum" -v count="$count" 'BEGIN {print sum / count}')
     else
         average=0
@@ -48,8 +50,10 @@ function calculate2AVG() {
   usedavg=0
   data2=""
 
+  files=$(ls -1t | grep "$1")
+
   # iterate through files and send data to HTML
-  for ff in /Task2/$1*.txt; do
+  for ff in $files; do
      while read -r free1 used1; do
            time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
            data2+="  $free1  &ensp; $used1 &ensp; $time<br>"
@@ -93,11 +97,13 @@ function calculate3AVG()
 
    data3=""
 
+  files=$(ls -1t | grep "$1")
+
   # Iterate over files and send data to HTML
-  for fff in /Task2/$1*.txt; do
+  for fff in $files; do
       while read -r disk free available; do
-          time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
-          data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp;  &emsp; &emsp;  $available &emsp; &emsp;  &emsp;  &emsp; $time  <br>"
+          time=$(echo $fff | awk -F'_' '{print $4 "\t" $5}')
+           data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp; &emsp;  $available &emsp; &emsp;  &emsp; $time  <br>"
       done < "$fff"
   done
 
@@ -123,6 +129,9 @@ function calculate3AVG()
 
   done
 
+   echo "$disk $avg_free $avg_available $TIMESTAMP" >> /Task2/dAVG.txt
+
+
 }
 
 calculate1AVG cpu
@@ -135,13 +144,13 @@ cat << EOF > /var/www/html/cpu.html
 
   <title>CPU</title>
   <body style="background-color:powderblue;">
-  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
-  <h2 style="font-family:verdana; text-align:center;" > CPU statistics <h2>
+  <h1 style="font-family:verdana; text-align:center;"  > Task 2 </h1>
+  <h2 style="font-family:verdana; text-align:center;" > CPU statistics </h2>
 
-  <h2> Average CPU Utilization = $average taken at $TIMESTAMP <h2>
-  <h2> Collected data : <h2>
-  <h2> Value &nbsp; TimeStamp <h2>
-  <h3> ${data} <h3>
+  <h2> Average CPU Utilization = $average taken at $TIMESTAMP </h2>
+  <h2> Collected data : </h2>
+  <h2> Value &nbsp; TimeStamp </h2>
+  <h3> ${data} </h3>
   </body>
 
 EOF
@@ -152,31 +161,29 @@ cat << EOF > /var/www/html/memory.html
 
   <title>Memory</title>
   <body style="background-color:powderblue;">
-  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
-  <h2 style="font-family:verdana; text-align:center;" > Memory statistics <h2>
+  <h1 style="font-family:verdana; text-align:center;"  > Task 2 </h1>
+  <h2 style="font-family:verdana; text-align:center;" > Memory statistics </h2>
 
-  <h2> Average Used Memory  = $usedavg taken at $TIMESTAMP <h2>
-  <h2> Average Free Memory  = $freeavg taken at $TIMESTAMP <h2>
-  <h2> Collected data : <h2>
-  <h2> &nbsp; Free &ensp; Used  &ensp; TimeStamp <h2>
-  <h3> ${data2} <h3>
+  <h2> Average Used Memory  = $usedavg taken at $TIMESTAMP </h2>
+  <h2> Average Free Memory  = $freeavg taken at $TIMESTAMP </h2>
+  <h2> Collected data : </h2>
+  <h2> &nbsp; Free &ensp; Used  &ensp; TimeStamp </h2>
+  <h3> ${data2} </h3>
   </body>
 
 EOF
 
-
-
 cat << EOF > /var/www/html/disk.html
 
-  <title>Disk</title>
-  <body style="background-color:powderblue;">
-  <h1 style="font-family:verdana; text-align:center;"  > Task 2 <h1>
-  <h2 style="font-family:verdana; text-align:center;" > Disk statistics <h2>
+   <title>Disk</title>
+   <body style="background-color:powderblue;">
+   <h1 style="font-family:verdana; text-align:center;">Task 2</h1>
+   <h2 style="font-family:verdana; text-align:center;">Disk statistics</h2>
 
-  <h2> $data3AVG <h2>
-  <h2> Collected data : <h2>
-  <h2> &nbsp; DiskName &emsp;  AverageFree &emsp;  AverageUsed &emsp;  TimeStamp  <h2>
-  <h3> ${data3} <h3>
-  </body>
+   <h2>$data3AVG</h2>
+   <h2>Collected data:</h2>
+   <h2>&nbsp; DiskName &emsp; AverageFree &emsp; AverageUsed &emsp; TimeStamp</h2>
+   <h3>${data3}</h3>
+   </body>
 
 EOF
