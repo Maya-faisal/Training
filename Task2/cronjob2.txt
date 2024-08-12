@@ -1,4 +1,3 @@
-
 #!/bin/bash
 set +x
 
@@ -86,7 +85,7 @@ function calculate3AVG()
   # Initialize associative arrays to hold the sum and count for each disk
    declare -A free_sum
    declare -A available_sum
-   declare -A count
+   count=0
 
    data3=""
 
@@ -98,7 +97,7 @@ function calculate3AVG()
           available1=$(echo $available | tr -d 'M')
           free_sum[$disk]=$((${free_sum[$disk]:-0} + $free1))
           available_sum[$disk]=$((${available_sum[$disk]:-0} + $available1))
-          count[$disk]=$((${count[$disk]:-0} + 1))
+          count=$(( count + 1))
           time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
           data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp;  &emsp; &emsp;  $available &emsp; &emsp;  &emsp;  &emsp; $time  <br>"
       done < "$fff"
@@ -107,8 +106,8 @@ function calculate3AVG()
   data3AVG=""
 
   for disk in "${!free_sum[@]}"; do
-      avg_free=$(echo "${free_sum[$disk]} / ${count[$disk]}" | bc)
-      avg_available=$(echo "${available_sum[$disk]} / ${count[$disk]}" | bc)
+      avg_free=$(echo "${free_sum[$disk]} / ${count}" | bc)
+      avg_available=$(echo "${available_sum[$disk]} / ${count}" | bc)
       echo "$disk $avg_free $avg_available $TIMESTAMP" >> /Task2/dAVG.txt
       data3AVG+="Disk $disk Free space average = $avg_free M and Average used space = $avg_available M taken at $time <br>"
 
@@ -138,6 +137,7 @@ cat << EOF > /var/www/html/cpu.html
 EOF
 
 
+
 cat << EOF > /var/www/html/memory.html
 
   <title>Memory</title>
@@ -153,6 +153,7 @@ cat << EOF > /var/www/html/memory.html
   </body>
 
 EOF
+
 
 
 cat << EOF > /var/www/html/disk.html
