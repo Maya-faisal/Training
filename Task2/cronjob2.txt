@@ -1,3 +1,4 @@
+
 #!/bin/bash
 set +x
 
@@ -9,7 +10,7 @@ function calculate1AVG()
 
    for f in /Task2/$1*.txt; do
 
-      # Read each line in the file
+      # Read each line in the files and send data to HTML
       while read -r value; do
          time=$(echo $f | awk -F'_' '{print $4 "\t" $5}')
          data+="&nbsp;$value &nbsp;  &nbsp; &nbsp; $time<br>"
@@ -19,6 +20,7 @@ function calculate1AVG()
      sum=0
      count=0
 
+     # iterate through the last 5 files and calculate the avg
      files=$(ls -1t | grep "$1" | tail -n 5)
 
      for f in $files; do
@@ -46,7 +48,7 @@ function calculate2AVG() {
   usedavg=0
   data2=""
 
-
+  # iterate through files and send data to HTML
   for ff in /Task2/$1*.txt; do
      while read -r free1 used1; do
            time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
@@ -54,7 +56,9 @@ function calculate2AVG() {
       done < "$ff"
   done
 
+   #iterate through the last 5 files and calculate AVG
    files=$(ls -1t | grep "$1" | tail -n 5)
+
       for ff in $files; do
         sumfree=0
         sumused=0
@@ -89,8 +93,16 @@ function calculate3AVG()
 
    data3=""
 
-  # Iterate over files
+  # Iterate over files and send data to HTML
   for fff in /Task2/$1*.txt; do
+      while read -r disk free available; do
+          time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
+          data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp;  &emsp; &emsp;  $available &emsp; &emsp;  &emsp;  &emsp; $time  <br>"
+      done < "$fff"
+  done
+
+  files=$(ls -1t | grep "$1" | tail -n 5)
+  for fff in $files; do
       while read -r disk free available; do
           # Add the values to the corresponding disk's sum and increase the count
           free1=$(echo $free | tr -d 'M')
@@ -98,10 +110,8 @@ function calculate3AVG()
           free_sum[$disk]=$((${free_sum[$disk]:-0} + $free1))
           available_sum[$disk]=$((${available_sum[$disk]:-0} + $available1))
           count=$(( count + 1))
-          time=$(echo $ff | awk -F'_' '{print $4 "\t" $5}')
-          data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp;  &emsp; &emsp;  $available &emsp; &emsp;  &emsp;  &emsp; $time  <br>"
       done < "$fff"
-  done
+   done
 
   data3AVG=""
 
