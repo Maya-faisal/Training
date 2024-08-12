@@ -60,7 +60,8 @@
 
 **calculated the disk avg using arrays**
 
-  ![image](https://github.com/user-attachments/assets/841c9908-993c-4f3c-9d2d-864da8e9aa70)
+  ![image](https://github.com/user-attachments/assets/599643e7-a8d0-4528-a166-6c38d6a19a42)
+
 
  
 # Install Apache server
