@@ -1,9 +1,10 @@
-
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
 
 # Install cron
-RUN apt-get update && apt-get install -y cron && apt-get install -y bc procps
+RUN apt-get update && apt-get install -y cron && apt-get install -y bc procps default-mysql-client
+
+RUN pip install mysql-connector-python==8.0.23
 
 # Set the working directory in the container
 WORKDIR /flask_blog
@@ -31,6 +32,7 @@ EXPOSE 5000
 
 # Define environment variable
 ENV FLASK_APP=app.py
+ENV FLASK_DEBUG=1
 
 # Copy the startup script into the container
 COPY start.sh /start.sh
@@ -39,4 +41,3 @@ RUN chmod +x /start.sh
 
 # Run the startup script when the container launches
 CMD ["bash", "/start.sh"]
-
