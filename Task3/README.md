@@ -31,31 +31,53 @@
 
 >#Use an official Python runtime as a parent image<br/>
 >FROM python:3.8-slim-buster<br/>
-># Install cron<br/>
+
+>#Install cron<br/>
 >RUN apt-get update && apt-get install -y cron && apt-get install -y bc procps default-mysql-client<br/>
+
+>#install database connector<br/>
 >RUN pip install mysql-connector-python==8.0.23<br/>
-># Set the working directory in the container<br/>
+
+>#Set the working directory in the container<br/>
 >WORKDIR /flask_blog<br/>
-># Copy the current directory contents into the container at /app<br/>
+
+>#Copy the current directory contents into the container at /app<br/>
 >COPY . /flask_blog<br/>
-># Add cronjobs scripts<br/>
+
+>#Add cronjobs scripts<br/>
 >COPY task2.sh task2.sh<br/>
 >COPY avg.sh avg.sh<br/>
-># Make them executable<br/>
+
+>#Make them executable<br/>
 >RUN chmod +x task2.sh avg.sh<br/>
-># Copy cronjobs config file<br/>
+
+>#Copy cronjobs config file<br/>
 >COPY crontabs.txt /etc/crontabs/root<br/>
 >RUN crontab /etc/crontabs/root<br/>
-># Install any needed packages specified in requirements.txt<br/>
+
+>#Install any needed packages specified in requirements.txt<br/>
 >RUN pip install --no-cache-dir -r requirements.txt<br/>
-># Make port 5000 available to the world outside this container<br/>
+
+>#Make port 5000 available to the world outside this container<br/>
 >EXPOSE 5000<br/>
-># Define environment variable<br/>
+
+>#Define environment variable<br/>
 >ENV FLASK_APP=app.py<br/>
 >ENV FLASK_DEBUG=1<br/>
-># Copy the startup script into the container<br/>
+
+>#Copy the startup script into the container and make it exectabel<br/>
 >COPY start.sh /start.sh<br/>
 >RUN chmod +x /start.sh<br/>
-># Run the startup script when the container launches<br/>
+
+>#Run the startup script when the container launches<br/>
 >CMD ["bash", "/start.sh"]<br/>
+
+**The start.sh script file starts the cronjobs and the flask App**<br/>
+
+>#!/bin/sh<br/>
+>#Start the Flask app<br/>
+>flask run --host=0.0.0.0 &<br/>
+>#Start cron in the foreground<br/>
+>cron -f<br/>
+
 
