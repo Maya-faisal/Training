@@ -80,4 +80,13 @@
 >#Start cron in the foreground<br/>
 >cron -f<br/>
 
+**2. Create the docker-compose file**<br/>
+
+Create the compose file that links the app with the database, and pass the database credentials.<br>
+It builds the flask app image with tag v1 and host it on port 5000, mariadb image on port 3306, as "db" host.
+
+![image](https://github.com/user-attachments/assets/d7937153-368d-4214-9f8a-7268cbbac613)
+
+   
+
 
