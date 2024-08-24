@@ -41,52 +41,13 @@
 
 
 # Docker and Containerization
+**1. First, create the Dockerfile for the Flask App** <br/>
 
-**1. First, create the Dockerfile for the Flask App**
-
->#Use an official Python runtime as a parent image<br/>
->FROM python:3.8-slim-buster<br/>
-
->#Install needed modules<br/>
->RUN apt-get update && apt-get install -y cron && apt-get install -y bc procps default-mysql-client<br/>
-
->#install database connector<br/>
->RUN pip install mysql-connector-python==8.0.23<br/>
-
->#Set the working directory in the container<br/>
->WORKDIR /flask_blog<br/>
-
->#Copy the current directory contents into the container at /app<br/>
->COPY . /flask_blog<br/>
-
->#Add cronjobs scripts<br/>
->COPY task2.sh task2.sh<br/>
->COPY avg.sh avg.sh<br/>
->COPY saveTOdb.py saveTOdb.py<br/>
-
->#Make them executable<br/>
->RUN chmod +x task2.sh avg.sh saveTOdb.py<br/>
-
->#Copy cronjobs config file<br/>
->COPY crontabs.txt /etc/crontabs/root<br/>
->RUN crontab /etc/crontabs/root<br/>
-
->#Install any needed packages specified in requirements.txt<br/>
->RUN pip install --no-cache-dir -r requirements.txt<br/>
-
->#Make port 5000 available to the world outside this container<br/>
->EXPOSE 5000<br/>
-
->#Define environment variable<br/>
->ENV FLASK_APP=app.py<br/>
->ENV FLASK_DEBUG=1<br/>
-
->#Copy the startup script into the container and make it exectabel<br/>
->COPY start.sh /start.sh<br/>
->RUN chmod +x /start.sh<br/>
-
->#Run the startup script when the container launches<br/>
->CMD ["bash", "/start.sh"]<br/>
+  __install python base image__ <br/>
+  __install all required modules__ <br/>
+  __copy needed files and directories__ <br/> 
+  __pass the environment variables for the Flask App__ <br/>
+  __pass the CMD to run the flask app, bash and python scripts responsible for collecting data__ <br/>
 
 **The start.sh script file starts the cronjobs and the flask App**<br/>
 
@@ -104,6 +65,11 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
 ![image](https://github.com/user-attachments/assets/f417dd32-3fb6-4589-8cc1-7c11e4e2890b)
 
 
-   
+# Pushing the Flask App Image to Docker HUB
+ **First create a docker hub account, then log into it to push and follow these commands:** <br/>
+ > docker login <br/>
+ > docker image tag flask_blog_v1 localhost:5000/v1 <br/>
+ > docker push localhost:5000/v1 <br/>
 
+ # How to Pull the Image and use it
 
