@@ -20,10 +20,25 @@
 **2. Test Database connection and Data Insertion<br/>**
 **3. Test the Flask App routes<br/>**
 
+![image](https://github.com/user-attachments/assets/a4c7df81-4cd3-4f8f-be27-72c5cc3d2576)
+<br/>
+
+> python3 -m unit_tets.py -v <br/>
+
+![image](https://github.com/user-attachments/assets/a7bef8ae-68dc-45c1-bba9-1a03bb1af408)
+
+
 # DataBase
 **Maria DataBase was used to store the data**
 
  ![image](https://github.com/user-attachments/assets/4571bef5-6a14-47f9-a707-ddb59a3dbd33)
+
+ <br/>
+ 
+ >mariadb -u root -p <br/>
+ 
+ ![image](https://github.com/user-attachments/assets/657ec732-0e41-4dc2-9f4c-b2d66c8a4350)
+
 
 # Docker and Containerization
 
@@ -47,9 +62,10 @@
 >#Add cronjobs scripts<br/>
 >COPY task2.sh task2.sh<br/>
 >COPY avg.sh avg.sh<br/>
+>COPY saveTOdb.py saveTOdb.py<br/>
 
 >#Make them executable<br/>
->RUN chmod +x task2.sh avg.sh<br/>
+>RUN chmod +x task2.sh avg.sh saveTOdb.py<br/>
 
 >#Copy cronjobs config file<br/>
 >COPY crontabs.txt /etc/crontabs/root<br/>
@@ -82,10 +98,11 @@
 
 **2. Create the docker-compose file**<br/>
 
-Create the compose file that links the app with the database, and pass the database credentials.<br>
-It builds the flask app image with tag v1 and host it on port 5000, mariadb image on port 3306, as "db" host.
+**Create the compose file that links the app with the database, and pass the database credentials.<br>
+It builds the flask app image with tag v1 and host it on port 5000, mariadb image on port 3306, as "db" host.**
 
-![image](https://github.com/user-attachments/assets/d7937153-368d-4214-9f8a-7268cbbac613)
+![image](https://github.com/user-attachments/assets/f417dd32-3fb6-4589-8cc1-7c11e4e2890b)
+
 
    
 
