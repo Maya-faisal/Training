@@ -84,3 +84,5 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
 3. Download the provided Docker-compose.yml file and run the following command
 
    > docker-compose up
+
+__make sure to have enough space :)__
