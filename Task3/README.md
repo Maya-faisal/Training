@@ -47,7 +47,7 @@
 >#Use an official Python runtime as a parent image<br/>
 >FROM python:3.8-slim-buster<br/>
 
->#Install cron<br/>
+>#Install needed modules<br/>
 >RUN apt-get update && apt-get install -y cron && apt-get install -y bc procps default-mysql-client<br/>
 
 >#install database connector<br/>
