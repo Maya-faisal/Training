@@ -68,8 +68,19 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
 # Pushing the Flask App Image to Docker HUB
  **First create a docker hub account, then log into it to push and follow these commands:** <br/>
  > docker login <br/>
- > docker image tag flask_blog_v1 localhost:5000/v1 <br/>
- > docker push localhost:5000/v1 <br/>
+ > docker image tag yourtag username/reponame:imagetag<br/>
+ > docker push username/reponame:tag <br/>
 
  # How to Pull the Image and use it
+ 1. pull the image
+    
+    > docker pull 1maya1/training:v1
+    
+2. Make sure to have docker-compose installed, if not install it using this command
+   
+   > curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+   > chmod +x /usr/local/bin/docker-compose
 
+3. Download the provided Docker-compose.yml file and run the following command
+
+   > docker-compose up
