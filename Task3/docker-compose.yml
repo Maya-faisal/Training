@@ -1,17 +1,31 @@
-
 version: '3'
 services:
   db:
     image: mariadb
+
     restart: always
+
     environment:
+      MARIADB_USER: root
       MARIADB_ROOT_PASSWORD: 123
-    ports:
-      - "3306:3306"
+      MARIADB_DATABASE: task3
+
+    networks:
+      - my-network 
+   
   v1:
     build: .
+
     ports:
       - "5000:5000"
+
     depends_on:
       - db
+
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
 

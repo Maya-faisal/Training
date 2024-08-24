@@ -1,3 +1,2 @@
-
-*/1 * * * * bash /flask_blog/task2.sh
-*/1 * * * * bash /flask_blog/avg.sh
+*/1 * * * * bash /flask_blog/task2.sh && /flask_blog/avg.sh 
+*/1 * * * * /flask_blog/bin/python3 /flask_blog/saveTOdb.py 

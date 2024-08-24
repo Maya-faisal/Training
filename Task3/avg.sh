@@ -1,16 +1,17 @@
-
 #!/bin/bash
 set +x
 
 cd /flask_blog/templates/readings || exit
 
+echo "mehe toooo"
+
 function calculate1AVG()
 {
    data=""
-
+   
    TIMESTAMP=$(date '+%Y-%m-%d_%H:%M:%S')
 
-   files=$(ls -1t | grep "$1")
+   files=$(ls -1t | grep "$1")  
    for f in $files; do
       # Read each line in the files and send data to HTML
       while read -r value; do
@@ -18,7 +19,7 @@ function calculate1AVG()
          data+="&nbsp;$value &nbsp;  &nbsp; &nbsp; $time<br>"
       done < "$f"
    done
-
+ 
      sum=0
      count=0
      average=0
@@ -30,8 +31,8 @@ function calculate1AVG()
             sum=$(awk -v sum="$sum" -v value="$value" 'BEGIN {print sum + value}')
             count=$((count + 1))
             done < "$f"
-     done
-
+     done     
+ 
    if [ $count -ne 0 ]; then
         average=$(awk -v sum="$sum" -v count="$count" 'BEGIN {print sum / count}')
     else
@@ -45,11 +46,11 @@ function calculate1AVG()
 
 
 function calculate2AVG() {
-
+  
   freeavg=0
   usedavg=0
   data2=""
-
+  
   files=$(ls -1t | grep "$1")
 
   # iterate through files and send data to HTML
@@ -77,7 +78,7 @@ function calculate2AVG() {
     if [ $count -ne 0 ]; then
         freeavg=$(awk -v sum1="$sumfree" -v count="$count" 'BEGIN {print sum1 / count}')
         usedavg=$(awk -v sum2="$sumused" -v count="$count" 'BEGIN {print sum2 / count}')
-
+       
     else
         freeavg=0
         usedavg=0
@@ -92,19 +93,19 @@ function calculate3AVG()
 {
   # Initialize associative arrays to hold the sum and count for each disk
    declare -A free_sum
-   declare -A available_sum
-   count=0
-
+   declare -A available_sum 
+   count=0 
+  
    data3=""
 
   files=$(ls -1t | grep "$1")
-
+    
   # Iterate over files and send data to HTML
-  for fff in $files; do
-      while read -r disk free available; do
+  for fff in $files; do 
+      while read -r disk free available; do      
           time=$(echo $fff | awk -F'_' '{print $4 "\t" $5}')
            data3+=" &emsp; $disk &emsp; &emsp;  &emsp;  &emsp; $free  &emsp; &emsp; &emsp;  $available &emsp; &emsp;  &emsp; $time  <br>"
-      done < "$fff"
+      done < "$fff" 
   done
 
   files=$(ls -1t | grep "$1" | tail -n 5)
@@ -117,7 +118,7 @@ function calculate3AVG()
         # Remove 'M' and 'G' and convert to numeric values
         free1=$(echo $free | tr -d 'M' | tr -d 'G')
         available1=$(echo $available | tr -d 'M' | tr -d 'G')
-
+        
         # Ensure free1 and available1 are not empty
         if [[ -n $free1 && -n $available1 ]]; then
             free_sum[$disk]=$((${free_sum[$disk]:-0} + $free1))
@@ -129,9 +130,9 @@ function calculate3AVG()
 
   #data3AVG=""
 
-  for disk in "${!free_sum[@]}"; do
-      avg_free=$(echo "${free_sum[$disk]} / ${count}" | bc)
-      avg_available=$(echo "${available_sum[$disk]} / ${count}" | bc)
+  for disk in "${!free_sum[@]}"; do 
+      avg_free=$(echo "${free_sum[$disk]} / ${count}" | bc) 
+      avg_available=$(echo "${available_sum[$disk]} / ${count}" | bc) 
       #echo "$disk $avg_free $avg_available $TIMESTAMP" >> /flask_blog/templates/dAVG.txt
      # data3AVG+="Disk $disk Free space average = $avg_free M and Average used space = $avg_available M taken at $time <br>"
 
@@ -146,11 +147,11 @@ calculate1AVG cpu
 
 calculate2AVG memory
 
-calculate3AVG disk
+calculate3AVG disk 
 
 
 cat << EOF > /flask_blog/templates/cpu.html
-
+  
   <title>CPU</title>
   <body style="background-color:powderblue;">
   <h1 style="font-family:verdana; text-align:center;"  > Task 2 </h1>
@@ -196,4 +197,5 @@ cat << EOF > /flask_blog/templates/disk.html
    </body>
 
 EOF
+
 

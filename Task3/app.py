@@ -1,14 +1,14 @@
-
 #--------- imports ---------
 
 import logging
 from flask import Flask , render_template
 import psutil
-import shutil
+import shutil 
 from functools import wraps
 import datetime
 import unittest
-import mariadb
+import mysql
+import mysql.connector
 
 # ---------- logger ---------
 
@@ -32,15 +32,15 @@ def log_calls(fn):
 
 #------- DataBase creation -------
 
-# Function to store data to MariaDB
 @log_calls
 def store(item, total, free, used, timestamp):
+    conn = None 
     try:
         # Connect to MariaDB
-        conn = mariadb.connect(
-            user="maya",
+        conn = mysql.connector.connect(
+            user="root",
             password="123",
-            host="localhost",
+            host="db",
             port=3306,
             database="task3"
         )
@@ -61,34 +61,33 @@ def store(item, total, free, used, timestamp):
         # Insert data into the table
         cursor.execute("""
             INSERT INTO stats (item, total, free, used, timestamp)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, (item, total, free, used, timestamp))
 
         # Commit the transaction
         conn.commit()
         logger.info("Data inserted successfully into MariaDB.")
-    except mariadb.Error as e:
+    except mysql.connector.Error as e:
         logger.error(f"Error inserting data into MariaDB: {e}")
     finally:
         # Close the connection
-        if conn:
+        if conn is not None:
             conn.close()
-
 
 #--------- Get Current system statistics function --------
 @log_calls
 def getCurrent(val,item):
-
+   
     data=""
 
     if item == "disk":
        total = val[0]
        used = val[1]
-       free = val[2]
+       free = val[2] 
 
        data = f" Total Disk = {total}GB , Used = {used}GB , and Free = {free}GB"
        store(item,total,free,used,str(datetime.datetime.now()))
-
+    
     elif item == "cpu":
          data = str(val)
          data += "%"
@@ -99,10 +98,10 @@ def getCurrent(val,item):
         used = val[1]
         free = val[2]
 
-        data = f" Total Memory = {total}GB ,  Used = {used}GB,  Free = {free}GB"
+        data = f" Total Memory = {total}GB ,  Used = {used}GB,  Free = {free}GB" 
         store(item,total,free,used,str(datetime.datetime.now()))
 
-
+ 
     # Create HTML content
     html_content = f"""
     <!DOCTYPE html>
@@ -132,19 +131,19 @@ def getCurrent(val,item):
     # Write the HTML content to a file
     with open(f"/flask_blog/templates/{item}current.html", "w") as file:
         file.write(html_content)
-
+ 
 
 #--------- convert reading to human readable values -----------
 @log_calls
 def humanize_Mvalues(memory_info):
-
+   
     total_memory = f"{memory_info.total / (1024 ** 3):.2f}"  # Convert bytes to GB and format to 2 decimal places
     used_memory = f"{memory_info.used / (1024 ** 3):.2f}"    # Convert bytes to GB and format to 2 decimal places
     free_memory = f"{memory_info.free / (1024 ** 3):.2f}"    # Convert bytes to GB and format to 2 decimal places
 
-    results = (total_memory, used_memory, free_memory)
+    results = (total_memory, used_memory, free_memory)  
     return results
-
+    
 
 @log_calls
 def humanize_Dvalues(disk_info):
@@ -156,7 +155,7 @@ def humanize_Dvalues(disk_info):
     return results
 
 
-#-------- APIs ------------
+#-------- APIs ------------ 
 @log_calls
 @app.route('/')
 def hello():
@@ -201,4 +200,6 @@ def currentmemory():
 
 #------ App config ------
 if __name__ == '__main__':
+       app.config["TEMPLATES_AUTO_RELOAD"] = True
+       app.config['SEND_FILE_MAX_AGE']=0 
        app.run(host='0.0.0.0', debug=True)
