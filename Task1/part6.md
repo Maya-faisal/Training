@@ -1,7 +1,7 @@
 # part6
 
 * write a script that runs for 10mins without doing anything located in /tmp files
-
+ 
 
   #!/bin/bash  <br /> end=$((SECONDS+600)) <br /> while [ $SECONDS -lt $end ];  <br /> do <br />    sleep 1  <br /> done
 
