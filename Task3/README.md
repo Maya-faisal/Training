@@ -229,7 +229,7 @@ networks:
 **3. Download the provided Docker-compose.yml and Dockerfile files and run the following command**
 ```bash
  docker-compose -d up
-```bash
+```
 
 **4. Test the App using the GET APIs on port 5000**
 ```bash
