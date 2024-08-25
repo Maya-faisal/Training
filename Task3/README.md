@@ -10,12 +10,12 @@
 def cpu():
     return render_template('cpu.html')
 
-@log_calls <br/>
-@app.route('/cpuCurrent') <br/>
-def cpuCurrent(): <br/>
-    cpu_usage = psutil.cpu_percent(interval=1) <br/>
-    getCurrent(cpu_usage,"cpu") <br/>
-    return render_template('cpucurrent.html') <br/>
+@log_calls 
+@app.route('/cpuCurrent') 
+def cpuCurrent(): 
+    cpu_usage = psutil.cpu_percent(interval=1) 
+    getCurrent(cpu_usage,"cpu") 
+    return render_template('cpucurrent.html') 
 ```
 # Logging
 **Logging is configured to write INFO level messages and above to a file named log.log. <br/>**
@@ -203,34 +203,39 @@ networks:
 # Pushing the Flask App Image to Docker HUB
  **First create a docker hub account, then log into it to push and follow these commands:** <br/>
  ```bash
- docker login <br/>
- docker image tag yourtag username/reponame:imagetag<br/>
- docker push username/reponame:tag <br/>
+ docker login 
+ docker image tag yourtag username/reponame:imagetag
+ docker push username/reponame:tag 
 ```
-<br/>
+
  # How to Pull the Image and use it
- 1. pull the image
-    
-    > docker pull 1maya1/training:v1
+ 
+ **1. pull the image**
+
+ ```bash
+  docker pull 1maya1/training:v1
+```
 
   > [!NOTE]
   > Make sure to have enough disk space, if not then enjoy doing a new partition for Docker data :)
-    
-2. Make sure to have docker-compose installed, if not install it using this command
-   
-   > curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose <br/>
-   > chmod +x /usr/local/bin/docker-compose
 
-3. Download the provided Docker-compose.yml and Dockerfile files and run the following command
 
-   > docker-compose -d up
+**2. Make sure to have docker-compose installed, if not install it using this command**
+  ```bash 
+  curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose 
+  chmod +x /usr/local/bin/docker-compose
+```
 
-4. Test the App using the GET APIs on port 5000
+**3. Download the provided Docker-compose.yml and Dockerfile files and run the following command**
+```bash
+ docker-compose -d up
+```bash
 
-    > http://127.0.0.1:5000/cpu <br/>
-    > http://127.0.0.1:5000/cpuCurrent
-
-<br/>
+**4. Test the App using the GET APIs on port 5000**
+```bash
+http://127.0.0.1:5000/cpu 
+http://127.0.0.1:5000/cpuCurrent
+```
 
 > [!NOTE]
 > Make sure to add port 5000 to iptables and accept requests.
