@@ -183,11 +183,11 @@ MariaDB [task3]> select * from stats;
 **The start.sh script file starts the cronjobs and the flask App**<br/>
 
 ```bash
-#!/bin/sh<br/>
-#Start the Flask app<br/>
-flask run --host=0.0.0.0 &<br/>
-#Start cron in the foreground<br/>
-cron -f<br/>
+#!/bin/sh
+#Start the Flask app
+flask run --host=0.0.0.0 &
+#Start cron in the foreground
+cron -f
 ```
 
 **2. Create the docker-compose file**<br/>
