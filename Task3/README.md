@@ -78,11 +78,14 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
     
 2. Make sure to have docker-compose installed, if not install it using this command
    
-   > curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+   > curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose <br/>
    > chmod +x /usr/local/bin/docker-compose
 
-3. Download the provided Docker-compose.yml file and run the following command
+3. Download the provided Docker-compose.yml and Dockerfile files and run the following command
 
-   > docker-compose up
+   > docker-compose -d up
 
-__make sure to have enough space :)__
+4. Test the App using the GET APIs on port 5000
+
+    > http://127.0.0.1:5000/cpu <br/>
+    > http://127.0.0.1:5000/cpuCurrent
