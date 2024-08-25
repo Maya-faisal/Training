@@ -3,8 +3,20 @@
  3 for the statistics for each hour in the last 24 hours, and was done using cronjobs to collect the data <br/>
  3 for current Memory/CPU/Disk usage, and was collected using Python modules**
 
-  ![image](https://github.com/user-attachments/assets/86c6f307-f3ef-4769-b545-53d899fa7b3d)
+  e.g
+```python
+@log_calls
+@app.route('/cpu')
+def cpu():
+    return render_template('cpu.html')
 
+@log_calls <br/>
+@app.route('/cpuCurrent') <br/>
+def cpuCurrent(): <br/>
+    cpu_usage = psutil.cpu_percent(interval=1) <br/>
+    getCurrent(cpu_usage,"cpu") <br/>
+    return render_template('cpucurrent.html') <br/>
+```
 # Logging
 **Logging is configured to write INFO level messages and above to a file named log.log. <br/>**
 
@@ -12,7 +24,19 @@
 
 **The @wraps(fn) decorator ensures the wrapper retains the original function’s metadata.**
 
-![image](https://github.com/user-attachments/assets/b9ce2a41-b1bc-4732-8963-7fcbf4eeda0d)
+```python
+logging.basicConfig(level=logging.INFO, filename="log.log" , filemode="w" , format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+def log_calls(fn):
+    @wraps(fn)
+    def wrapper(*args):
+            logger.info(f"Calling Function: {fn.__name__} with args: {args}")
+            result = fn(*args)
+            logger.info(f" Function {fn.__name__} returned: {result}")
+            return result
+    return wrapper
+```
 
 # Unit-Testing
 **Three test were implemented<br/>**
@@ -20,25 +44,104 @@
 **2. Test Database connection and Data Insertion<br/>**
 **3. Test the Flask App routes<br/>**
 
-![image](https://github.com/user-attachments/assets/a4c7df81-4cd3-4f8f-be27-72c5cc3d2576)
-<br/>
+```python
+class ActivityTests(unittest.TestCase):
 
-> python3 -m unit_tets.py -v <br/>
+    def setUp(self):
+        self.app = app
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
 
-![image](https://github.com/user-attachments/assets/a7bef8ae-68dc-45c1-bba9-1a03bb1af408)
+
+    def test_humanize(self):
+        test_info = TestInfo(total=10367352832, used=8186245120, free=2181107712)
+        result_test = ('9.66', '7.62', '2.03')
+        self.assertEqual(humanize_Mvalues(test_info), result_test)
+    
+    def test_insert_to_DB(self):
+        store("memory",12,3.1,9.9,"2024-08-21 11:07:10.203109")
+
+        # Connect to the database and check if the entry exists
+        conn = mysql.connector.connect( user="root",
+                                        password="123",
+                                        host="localhost",
+                                        port=3306,
+                                        database="task3"
+                                      )
+        c = conn.cursor()
+        c.execute("SELECT * FROM stats  WHERE item='memory' AND total=12 AND free=3.1 AND used=9.9;")
+        added = c.fetchone()
+        conn.close()
+
+        self.assertIsNotNone(added, "Entry was not added to the database")
+        
+
+    def test_routes(self):
+        tester = app.test_client(self)
+        response = tester.get('/cpu')
+        # Check if the status code is 200 (OK)
+        self.assertIn(b'<title>CPU Usage</title>', response.data)
+```
+
+```python
+ python3 -m unit_tets.py -v <br/>
+```
 
 
 # DataBase
 **Maria DataBase was used to store the data**
 
- ![image](https://github.com/user-attachments/assets/4571bef5-6a14-47f9-a707-ddb59a3dbd33)
+ ```python
+#------- DataBase creation -------
+
+@log_calls
+def store(item, total, free, used, timestamp):
+    conn = None 
+    try:
+        # Connect to MariaDB
+        conn = mysql.connector.connect(
+            user="root",
+            password="123",
+            host="db",
+            port=3306,
+            database="task3"
+        )
+        cursor = conn.cursor()
+
+        # Create table if it doesn't exist
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS stats (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                item VARCHAR(255),
+                total DOUBLE,
+                free DOUBLE,
+                used DOUBLE,
+                timestamp VARCHAR(255)
+            )
+        """)
+
+        # Insert data into the table
+        cursor.execute("""
+            INSERT INTO stats (item, total, free, used, timestamp)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (item, total, free, used, timestamp))
+
+        # Commit the transaction
+        conn.commit()
+        logger.info("Data inserted successfully into MariaDB.")
+    except mysql.connector.Error as e:
+        logger.error(f"Error inserting data into MariaDB: {e}")
+    finally:
+        # Close the connection
+        if conn is not None:
+            conn.close()
+```
 
  <br/>
- 
- >mariadb -u root -p <br/>
- 
- ![image](https://github.com/user-attachments/assets/657ec732-0e41-4dc2-9f4c-b2d66c8a4350)
 
+ ```python
+ mariadb -u root -p <br/>
+ ```
 
 # Docker and Containerization
 **1. First, create the Dockerfile for the Flask App** <br/>
@@ -51,26 +154,60 @@
 
 **The start.sh script file starts the cronjobs and the flask App**<br/>
 
->#!/bin/sh<br/>
->#Start the Flask app<br/>
->flask run --host=0.0.0.0 &<br/>
->#Start cron in the foreground<br/>
->cron -f<br/>
+```bash
+#!/bin/sh<br/>
+#Start the Flask app<br/>
+flask run --host=0.0.0.0 &<br/>
+#Start cron in the foreground<br/>
+cron -f<br/>
+```
 
 **2. Create the docker-compose file**<br/>
 
 **Create the compose file that links the app with the database, and pass the database credentials.<br>
 It builds the flask app image with tag v1 and host it on port 5000, mariadb image on port 3306, as "db" host.**
 
-![image](https://github.com/user-attachments/assets/f417dd32-3fb6-4589-8cc1-7c11e4e2890b)
+```yml
+version: '3'
+services:
+  db:
+    image: mariadb
 
+    restart: always
+
+    environment:
+      MARIADB_USER: root
+      MARIADB_ROOT_PASSWORD: 123
+      MARIADB_DATABASE: task3
+
+    networks:
+      - my-network 
+   
+  v1:
+    build: .
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - db
+
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+```
 
 # Pushing the Flask App Image to Docker HUB
  **First create a docker hub account, then log into it to push and follow these commands:** <br/>
- > docker login <br/>
- > docker image tag yourtag username/reponame:imagetag<br/>
- > docker push username/reponame:tag <br/>
-
+ ```bash
+ docker login <br/>
+ docker image tag yourtag username/reponame:imagetag<br/>
+ docker push username/reponame:tag <br/>
+```
+<br/>
  # How to Pull the Image and use it
  1. pull the image
     
