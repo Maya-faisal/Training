@@ -245,7 +245,7 @@ networks:
 ```
 
   > [!NOTE]
-  > Make sure to have enough disk space, if not then enjoy doing a new partition for Docker data :)
+  > Make sure to have enough disk space, if not then enjoy creating a new partition for Docker data :)
 
 
 **2. Make sure to have docker-compose installed, if not install it using this command**
