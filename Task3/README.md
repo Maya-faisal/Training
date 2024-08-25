@@ -75,6 +75,9 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
  1. pull the image
     
     > docker pull 1maya1/training:v1
+
+  > [!NOTE]
+  > Make sure to have enough disk space, if not then enjoy doing a new partition for Docker data :)
     
 2. Make sure to have docker-compose installed, if not install it using this command
    
@@ -89,3 +92,9 @@ It builds the flask app image with tag v1 and host it on port 5000, mariadb imag
 
     > http://127.0.0.1:5000/cpu <br/>
     > http://127.0.0.1:5000/cpuCurrent
+
+<br/>
+
+> [!NOTE]
+> Make sure to add port 5000 to iptables and accept requests.
+> Also, add port forwarding to your VM machine
