@@ -14,7 +14,7 @@ services:
       - my-network 
    
   v1:
-    build: .
+    build: 1maya1/training:v1
 
     ports:
       - "5000:5000"
