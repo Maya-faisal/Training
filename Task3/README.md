@@ -38,6 +38,16 @@ def log_calls(fn):
     return wrapper
 ```
 
+```python
+2024-08-26 07:08:49,056 - INFO - 10.0.2.2 - - [26/Aug/2024 07:08:49] "GET /memory HTTP/1.1" 200 -
+2024-08-26 07:09:49,368 - INFO - Calling Function: humanize_Mvalues with args: (svmem(total=1926873088, available=1000488960, percent=48.1, used=763707392, free=460177408, active=793649152, inactive=530292736, buffers=38944768, cached=664043520, shared=9752576, slab=67846144),)
+2024-08-26 07:09:49,368 - INFO -  Function humanize_Mvalues returned: ('1.79', '0.71', '0.43')
+2024-08-26 07:09:49,368 - INFO - Calling Function: getCurrent with args: (('1.79', '0.71', '0.43'), 'memory')
+2024-08-26 07:09:49,368 - INFO - Calling Function: store with args: ('memory', '1.79', '0.43', '0.71', '2024-08-26 07:09:49.368559')
+2024-08-26 07:09:49,392 - INFO - Data inserted successfully into MariaDB.
+2024-08-26 07:09:49,392 - INFO -  Function store returned: None
+
+```
 # Unit-Testing
 **Three test were implemented<br/>**
 **1. Test the Humanize value function, that converts the collected data to Human readable values<br/>**
