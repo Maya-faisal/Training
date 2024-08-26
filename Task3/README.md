@@ -253,13 +253,17 @@ services:
     restart: always
 
     environment:
-      MARIADB_USER: root
       MARIADB_ROOT_PASSWORD: 123
       MARIADB_DATABASE: task3
-
+      MARIADB_USER: maya
+      MARIADB_PASSWORD: 123
+    
     networks:
       - my-network 
    
+    volumes:
+      - db_data:/var/lib/mysql
+
   v1:
     build: .
 
@@ -275,6 +279,15 @@ services:
 networks:
   my-network:
     driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/db_data
+      o: bind
+
 ```
 
 # Pushing the Flask App Image to Docker HUB
