@@ -13,7 +13,7 @@ WORKDIR /flask_blog
 COPY . /flask_blog
 
 # Make cronjobs executable
-RUN chmod +x task2.sh avg.sh saveTOdb.py 
+RUN chmod +x task2.sh avg.sh 
 
 # Copy cronjobs config file
 COPY crontabs.txt /etc/crontabs/root
