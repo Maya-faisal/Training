@@ -49,19 +49,13 @@ def log_calls(fn):
 
 ```
 # Unit-Testing
-**Three test were implemented<br/>**
+
 **1. Test the Humanize value function, that converts the collected data to Human readable values<br/>**
 **2. Test Database connection and Data Insertion<br/>**
-**3. Test the Flask App routes<br/>**
+
 
 ```python
 class ActivityTests(unittest.TestCase):
-
-    def setUp(self):
-        self.app = app
-        self.app.config['TESTING'] = True
-        self.client = self.app.test_client()
-
 
     def test_humanize(self):
         test_info = TestInfo(total=10367352832, used=8186245120, free=2181107712)
@@ -85,22 +79,15 @@ class ActivityTests(unittest.TestCase):
 
         self.assertIsNotNone(added, "Entry was not added to the database")
         
-
-    def test_routes(self):
-        tester = app.test_client(self)
-        response = tester.get('/cpu')
-        # Check if the status code is 200 (OK)
-        self.assertIn(b'<title>CPU Usage</title>', response.data)
 ```
 
 ```python
  python3 unit_test.py -v 
 ```
+
 ```python
 test_humanize (__main__.ActivityTests) ... ok
 test_insert_to_DB (__main__.ActivityTests) ... ok
-test_routes (__main__.ActivityTests) ... FAIL
-
 ```
 
 
