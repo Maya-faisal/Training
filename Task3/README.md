@@ -98,46 +98,57 @@ test_insert_to_DB (__main__.ActivityTests) ... ok
 #------- DataBase creation -------
 
 @log_calls
-def store(item, total, free, used, timestamp):
-    conn = None 
-    try:
-        # Connect to MariaDB
-        conn = mysql.connector.connect(
-            user="root",
-            password="123",
-            host="db",
-            port=3306,
-            database="task3"
-        )
-        cursor = conn.cursor()
+def create_table(cursor):
+    # Create table if it doesn't exist
+     cursor.execute("""
+           CREATE TABLE IF NOT EXISTS stats (
+               id INT AUTO_INCREMENT PRIMARY KEY,
+               item VARCHAR(255),
+               total DOUBLE,
+               free DOUBLE,
+               used DOUBLE,
+               timestamp VARCHAR(255)
+           )
+       """)
 
-        # Create table if it doesn't exist
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS stats (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                item VARCHAR(255),
-                total DOUBLE,
-                free DOUBLE,
-                used DOUBLE,
-                timestamp VARCHAR(255)
-            )
-        """)
-
-        # Insert data into the table
-        cursor.execute("""
-            INSERT INTO stats (item, total, free, used, timestamp)
+def insert(cursor,item,total,free,used,timestamp):
+     # Insert data into the table
+     cursor.execute("""
+         INSERT INTO stats (item, total, free, used, timestamp)
             VALUES (%s, %s, %s, %s, %s)
         """, (item, total, free, used, timestamp))
+	
+
+@log_calls
+def store(item, total, free, used, timestamp):
+    conn = None 
+ 
+    # Connect to MariaDB
+    conn = mysql.connector.connect(
+           user="root",
+           password="123",
+           host="db",
+           port=3306,
+           database="task3"
+       )
+
+    cursor = conn.cursor()
+
+    try:  
+        insert(cursor,item,total,free,used,timestamp)
 
         # Commit the transaction
         conn.commit()
         logger.info("Data inserted successfully into MariaDB.")
     except mysql.connector.Error as e:
-        logger.error(f"Error inserting data into MariaDB: {e}")
+        logger.error(f"Error inserting data into MariaDB, tables not found creating it : {e}")
+        create_table(cursor)
+        insert(cursor,item,total,free,used,timestamp)
     finally:
         # Close the connection
         if conn is not None:
             conn.close()
+
 ```
 
  ```python
