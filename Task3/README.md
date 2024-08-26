@@ -215,8 +215,6 @@ RUN chmod +x /start.sh
 CMD bash /start.sh ; python3 saveTOdb.py &
 ```
 
-```
-
 **The start.sh script file starts the cronjobs and the flask App**<br/>
 
 ```text
