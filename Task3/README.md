@@ -219,6 +219,11 @@ CMD bash /start.sh ; python3 saveTOdb.py &
 
 **The start.sh script file starts the cronjobs and the flask App**<br/>
 
+```text
+0 * * * * bash /flask_blog/task2.sh && /flask_blog/avg.sh 
+0 * * * * /flask_blog/bin/python3 /flask_blog/saveTOdb.py
+```
+
 ```bash
 #!/bin/sh
 #Start the Flask app
