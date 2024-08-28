@@ -17,7 +17,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
       version: '3'
 
       services:
-        mariadb:
+        db:
           image: mariadb:latest
           environment:
             MYSQL_ROOT_PASSWORD: root_password
@@ -36,6 +36,15 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
           networks:
             - galera_net
       
+      v1:
+         image: 1maya1/training:v1
+         ports:
+           - "5000:5000"
+         depends_on:
+           - db
+         networks:
+           - my-network
+           
       volumes:
         db_data:
       
