@@ -14,65 +14,65 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 3. **Update the `docker-compose.yml` File**
    - On the **first node**, configure the `docker-compose.yml` file as follows:
      ```yaml
-     version: '3'
+      version: '3'
 
-services:
-  mariadb:
-    image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: example_db
-      MYSQL_USER: example_user
-      MYSQL_PASSWORD: user_password
-      CLUSTER_NAME: "galera_cluster"
-      CLUSTER_JOIN: ""  # First node, so no join address
-    ports:
-      - "3306:3306"
-      - "4567:4567"
-      - "4568:4568"
-      - "4444:4444"
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - galera_net
-
-volumes:
-  db_data:
-
-networks:
-  galera_net:
-    driver: bridge
+      services:
+        mariadb:
+          image: mariadb:latest
+          environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: example_db
+            MYSQL_USER: example_user
+            MYSQL_PASSWORD: user_password
+            CLUSTER_NAME: "galera_cluster"
+            CLUSTER_JOIN: ""  # First node, so no join address
+          ports:
+            - "3306:3306"
+            - "4567:4567"
+            - "4568:4568"
+            - "4444:4444"
+          volumes:
+            - db_data:/var/lib/mysql
+          networks:
+            - galera_net
+      
+      volumes:
+        db_data:
+      
+      networks:
+        galera_net:
+          driver: bridge
      ```
    - On the **second and third nodes**, modify the `docker-compose.yml` file accordingly:
      ```yaml
      version: '3'
 
-services:
-  mariadb:
-    image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: example_db
-      MYSQL_USER: example_user
-      MYSQL_PASSWORD: user_password
-      CLUSTER_NAME: "galera_cluster"
-      CLUSTER_JOIN: "10.0.2.15"  # Join the cluster using Node 1's IP
-    ports:
-      - "3306:3306"
-      - "4567:4567"
-      - "4568:4568"
-      - "4444:4444"
+    services:
+      mariadb:
+        image: mariadb:latest
+        environment:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: example_db
+          MYSQL_USER: example_user
+          MYSQL_PASSWORD: user_password
+          CLUSTER_NAME: "galera_cluster"
+          CLUSTER_JOIN: "10.0.2.15"  # Join the cluster using Node 1's IP
+        ports:
+          - "3306:3306"
+          - "4567:4567"
+          - "4568:4568"
+          - "4444:4444"
+        volumes:
+          - db_data:/var/lib/mysql
+        networks:
+          - galera_net
+    
     volumes:
-      - db_data:/var/lib/mysql
+      db_data:
+    
     networks:
-      - galera_net
-
-volumes:
-  db_data:
-
-networks:
-  galera_net:
-    driver: bridge
+      galera_net:
+        driver: bridge
      ```
 
 4. **Bootstrap the Cluster from Node 1**
