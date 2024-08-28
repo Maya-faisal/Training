@@ -1,6 +1,6 @@
 # High availability cluster for MariaDB
 
-**Setting up a 3-node MariaDB Galera cluster for high availability, for Task3 image with each container running on a separate VM.**
+**Setting up a 3-node MariaDB Galera cluster for high availability, for Task3 image.**
 
 Here are the steps to set up a 3-node Galera cluster with MariaDB using containers, each on a separate VM:
 
