@@ -5,11 +5,11 @@
 Here are the steps to set up a 3-node Galera cluster with MariaDB using containers, each on a separate VM:
 
 1. **Create 3 VMs Connected via NAT Network**
-   - Ensure all VMs are configured to use a NAT network for internal communication.
+- Ensure all VMs are configured to use a NAT network for internal communication.
 
 2. **Check IP Addresses and Test Connectivity**
-   - Identify the IP address of each VM.
-   - Use the `ping` command to verify that all VMs can communicate with each other.
+- Identify the IP address of each VM.
+- Use the `ping` command to verify that all VMs can communicate with each other.
 
 3. **Update the `docker-compose.yml` File**
    - On the **first node**, configure the `docker-compose.yml` file as follows:
@@ -47,32 +47,32 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
      ```yaml
      version: '3'
 
-    services:
-      mariadb:
-        image: mariadb:latest
-        environment:
-          MYSQL_ROOT_PASSWORD: root_password
-          MYSQL_DATABASE: example_db
-          MYSQL_USER: example_user
-          MYSQL_PASSWORD: user_password
-          CLUSTER_NAME: "galera_cluster"
-          CLUSTER_JOIN: "10.0.2.15"  # Join the cluster using Node 1's IP
-        ports:
-          - "3306:3306"
-          - "4567:4567"
-          - "4568:4568"
-          - "4444:4444"
-        volumes:
-          - db_data:/var/lib/mysql
-        networks:
-          - galera_net
-    
-    volumes:
-      db_data:
-    
-    networks:
-      galera_net:
-        driver: bridge
+       services:
+         mariadb:
+           image: mariadb:latest
+           environment:
+             MYSQL_ROOT_PASSWORD: root_password
+             MYSQL_DATABASE: example_db
+             MYSQL_USER: example_user
+             MYSQL_PASSWORD: user_password
+             CLUSTER_NAME: "galera_cluster"
+             CLUSTER_JOIN: "10.0.2.15"  # Join the cluster using Node 1's IP
+           ports:
+             - "3306:3306"
+             - "4567:4567"
+             - "4568:4568"
+             - "4444:4444"
+           volumes:
+             - db_data:/var/lib/mysql
+           networks:
+             - galera_net
+       
+       volumes:
+         db_data:
+       
+       networks:
+         galera_net:
+           driver: bridge
      ```
 
 4. **Bootstrap the Cluster from Node 1**
