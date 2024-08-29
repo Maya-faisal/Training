@@ -13,6 +13,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 
 3. **Update the `docker-compose.yml` File**
 - On the **first node**, configure the `docker-compose.yml` file as follows:
+- 
      ```yaml
       version: '3'
 
