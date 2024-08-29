@@ -13,7 +13,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 
 3. **Update the `docker-compose.yml` File**
 - On the **first node**, configure the `docker-compose.yml` file as follows:
-- 
+  
      ```yaml
       version: '3'
 
@@ -54,7 +54,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
           driver: bridge
      ```
 - On the **second and third nodes**, modify the `docker-compose.yml` file accordingly:
-- 
+ 
      ```yaml
      version: '3'
 
@@ -89,18 +89,18 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 4. **Bootstrap the Cluster from Node 1**
 - Start the Docker container on the first node to initialize the Galera cluster.
 ```bash
-   docker-compose up -d
+docker-compose up -d
 ```
 
 5. **Add Other VMs to the Cluster**
 - Start the Docker containers on the second and third nodes to join them to the cluster.
 ```bash
-   docker-compose up -d
+docker-compose up -d
 ```
 
 6. **Verify the Cluster Size**
 - Check the cluster size to confirm that all nodes are correctly added and operational.
 ```bash
-   docker exec -it <container_name> mysql -u root -p
-   SHOW STATUS LIKE 'wsrep_cluster_size';
+docker exec -it <container_name> mysql -u root -p
+SHOW STATUS LIKE 'wsrep_cluster_size';
 ```
