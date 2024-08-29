@@ -54,6 +54,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
           driver: bridge
      ```
 - On the **second and third nodes**, modify the `docker-compose.yml` file accordingly:
+- 
      ```yaml
      version: '3'
 
