@@ -13,81 +13,70 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 
 3. **Update the `docker-compose.yml` File**
 - On the **first node**, configure the `docker-compose.yml` file as follows:
-  
-     ```yaml
-      version: '3'
 
+ ```yaml
+     
       services:
-        db:
-          image: mariadb:latest
-          environment:
-            MYSQL_ROOT_PASSWORD: root_password
-            MYSQL_DATABASE: example_db
-            MYSQL_USER: example_user
-            MYSQL_PASSWORD: user_password
-            CLUSTER_NAME: "galera_cluster"
-            CLUSTER_JOIN: ""  # First node, so no join address
-          ports:
-            - "3306:3306"
-            - "4567:4567"
-            - "4568:4568"
-            - "4444:4444"
-          volumes:
-            - db_data:/var/lib/mysql
-          networks:
-            - galera_net
+      db:
+        image: bitnami/mariadb-galera
+        container_name: node1
+        environment:
+          - ALLOW_EMPTY_PASSWORD= yes
+          - MARIADB_GALERA_MARIABACKUP_PASSWORD=<password>
+          - MARIADB_ROOT_PASSWORD=<password>
+          - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes
+          - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://
+          - MARIADB_GALERA_NODE_ADDRESS=1<node1_ip>
+          - MARIADB_GALERA_CLUSTER_NAME= galera_cluster
+          - MARIADB_MASTER_HOST=<master_node_ip>
+        restart: unless-stopped
+        networks:
+          - app-tier
+        volumes:
+          - /path/to/mariadb-persistence:/bitnami/mariadb
       
       v1:
-         image: 1maya1/training:v1
-         ports:
-           - "5000:5000"
-         depends_on:
-           - db
-         networks:
-           - my-network
-           
-      volumes:
-        db_data:
+        image: v1
+        ports:
+          - "5000:5000"
+        depends_on:
+          - db
+        networks:
+          - app-tier
       
       networks:
-        galera_net:
-          driver: bridge
-     ```
+      app-tier:
+        driver: bridge
+
+  ```
 - On the **second and third nodes**, modify the `docker-compose.yml` file accordingly:
  
-     ```yaml
-     version: '3'
-
-       services:
-         mariadb:
-           image: mariadb:latest
-           environment:
-             MYSQL_ROOT_PASSWORD: root_password
-             MYSQL_DATABASE: example_db
-             MYSQL_USER: example_user
-             MYSQL_PASSWORD: user_password
-             CLUSTER_NAME: "galera_cluster"
-             CLUSTER_JOIN: "10.0.2.15"  # Join the cluster using Node 1's IP
-           ports:
-             - "3306:3306"
-             - "4567:4567"
-             - "4568:4568"
-             - "4444:4444"
-           volumes:
-             - db_data:/var/lib/mysql
-           networks:
-             - galera_net
-       
-       volumes:
-         db_data:
-       
-       networks:
-         galera_net:
-           driver: bridge
-     ```
+  ```yaml
+     services:
+        db:
+          image: bitnami/mariadb-galera
+          container_name: node2
+          environment:
+            - ALLOW_EMPTY_PASSWORD= yes
+            - MARIADB_GALERA_MARIABACKUP_PASSWORD= <password>
+            - MARIADB_ROOT_PASSWORD= <password>
+            - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://<bootstrap_node_ip>
+            - MARIADB_GALERA_NODE_ADDRESS=<node2_ip>
+            - MARIADB_GALERA_CLUSTER_NAME= galera_cluster
+          restart: unless-stopped
+          networks:
+            - app-tier
+          volumes:
+            - /path/to/mariadb-persistence:/bitnami/mariadb
+        
+      networks:
+        app-tier:
+          driver: bridge
+   ```
 
 4. **Bootstrap the Cluster from Node 1**
 - Start the Docker container on the first node to initialize the Galera cluster.
+  
 ```bash
 docker-compose up -d
 ```
@@ -104,3 +93,6 @@ docker-compose up -d
 docker exec -it <container_name> mysql -u root -p
 SHOW STATUS LIKE 'wsrep_cluster_size';
 ```
+
+  > [!NOTE]
+  > Make sure to open all necessary ports to enable communication between VMs
