@@ -33,6 +33,14 @@ def log_calls(fn):
 #------- DataBase creation -------
 
 @log_calls
+def create_database_if_not_exists(cursor, database_name):
+    try:
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+    except mysql.connector.Error as err:
+        logger.error(f"Failed creating database: {err}")
+        raise
+
+@log_calls
 def create_table(cursor):
     # Create table if it doesn't exist
      cursor.execute("""
@@ -64,10 +72,14 @@ def store(item, total, free, used, timestamp):
            password="123",
            host="db",
            port=3306,
-           database="task3"
        )
 
     cursor = conn.cursor()
+    # Create the database if it does not exist
+    create_database_if_not_exists(cursor, "task3")
+
+    # Select the database
+    conn.database = "task3"	
 
 
     try:  
