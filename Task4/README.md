@@ -16,7 +16,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 
  ```yaml
      
-      services:
+ services:
       db:
         image: bitnami/mariadb-galera
         container_name: node1
@@ -34,7 +34,11 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
           - app-tier
         volumes:
           - /path/to/mariadb-persistence:/bitnami/mariadb
-      
+        ports:
+          - "4567:4567"
+          - "3306:3306"
+          - "4444:4444"
+          - "4568:4568"
       v1:
         image: v1
         ports:
@@ -52,7 +56,7 @@ Here are the steps to set up a 3-node Galera cluster with MariaDB using containe
 - On the **second and third nodes**, modify the `docker-compose.yml` file accordingly:
  
   ```yaml
-     services:
+    services:
         db:
           image: bitnami/mariadb-galera
           container_name: node2
