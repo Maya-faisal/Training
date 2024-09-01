@@ -1,4 +1,4 @@
-[Task4txt.txt](https://github.com/user-attachments/files/16827889/Task4txt.txt)# Devops Training Tasks
+# Devops Training Tasks
 Task 1
 [Linux_Task_1.pdf](https://github.com/user-attachments/files/16487656/Linux_Task_1.pdf)
 
