@@ -319,10 +319,6 @@ volumes:
   docker pull 1maya1/training:v1
 ```
 
-  > [!NOTE]
-  > Make sure to have enough disk space, if not then enjoy creating a new partition for Docker data :)
-
-
 **2. Make sure to have docker-compose installed, if not install it using this command**
   ```bash 
   curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose 
