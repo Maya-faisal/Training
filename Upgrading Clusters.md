@@ -32,7 +32,7 @@
   systemctl daemon-reload
   systemctl restart kubelet
 ```
-**8. reshecdult the controlplane node**
+**8. reshecdule the controlplane node**
 ```shell
   kubectl uncordon controlplane
 ```
