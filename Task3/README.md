@@ -325,7 +325,7 @@ volumes:
   chmod +x /usr/local/bin/docker-compose
 ```
 
-**3. Download the provided Docker-compose.yml and Dockerfile files and run the following command**
+**3. Clone and run the following command**
 ```bash
  docker-compose up -d
 ```
