@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build and Run Containers') {
+            steps {
+                script {
+                    // Build and run the containers using Docker Compose
+                    sh 'docker-compose up -d --build'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                // Clean up containers after pipeline completes
+                sh 'docker-compose down'
+            }
+        }
+    }
+}
