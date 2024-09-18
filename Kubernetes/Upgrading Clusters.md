@@ -1,4 +1,4 @@
-# Upgrading a Kubernets Cluster from to 1.30.0-1.1
+# Upgrading a Kubernetes Cluster from to 1.30.0-1.1
 
 **1. update the repo URL version** 
 ```shell
