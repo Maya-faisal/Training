@@ -4,7 +4,6 @@ pipeline {
         stage('Install Docker Compose') {
             steps {
                 script {
-                    // Install Docker Compose in a user-accessible directory
                     sh '''
                     if ! [ -x "$(command -v docker-compose)" ]; then
                         mkdir -p ~/bin
@@ -27,15 +26,6 @@ pipeline {
                     dir('Task3') {
                         sh '~/bin/docker-compose up -d --build'
                     }
-                }
-            }
-        }
-    }
-    post {
-        always {
-            script {
-                dir('Task3') {
-                    sh '~/bin/docker-compose down'
                 }
             }
         }
