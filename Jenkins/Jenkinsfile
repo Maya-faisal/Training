@@ -14,11 +14,21 @@ pipeline {
                 }
             }
         }
+
         stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
+
+         stage('Start docker daemon'){
+            steps{
+                sh '''
+                systemctl start docker
+                '''
+            }
+        }
+        
         stage('Build and Run Containers') {
             steps {
                 script {
