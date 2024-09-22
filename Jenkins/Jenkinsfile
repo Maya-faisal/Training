@@ -1,6 +1,19 @@
 pipeline {
     agent any
     stages {
+        stage('Install Docker Compose') {
+            steps {
+                script {
+                    // Install Docker Compose if it's not available
+                    sh '''
+                    if ! [ -x "$(command -v docker-compose)" ]; then
+                        curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                        chmod +x /usr/local/bin/docker-compose
+                    fi
+                    '''
+                }
+            }
+        }
         stage('Checkout Code') {
             steps {
                 checkout scm
@@ -9,7 +22,6 @@ pipeline {
         stage('Build and Run Containers') {
             steps {
                 script {
-                    // Navigate to the Task3 folder and run Docker Compose
                     dir('Task3') {
                         sh 'docker-compose up -d --build'
                     }
@@ -20,7 +32,6 @@ pipeline {
     post {
         always {
             script {
-                // Navigate to the Task3 folder and clean up containers after the pipeline completes
                 dir('Task3') {
                     sh 'docker-compose down'
                 }
