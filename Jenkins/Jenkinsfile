@@ -24,10 +24,34 @@ pipeline {
                 script {
                     dir('Task3') {
                         sh '''
+                        # Unset TLS-related environment variables
+                        unset DOCKER_TLS_VERIFY
+                        unset DOCKER_HOST
+                        unset DOCKER_CERT_PATH
+                        
+                        # Set the PATH to include ~/bin
                         export PATH=$PATH:~/bin
-                        ~/bin/docker-compose up -d --build
+                        
+                        # Run Docker Compose
+                        docker-compose up -d --build
                         '''
                     }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                dir('Task3') {
+                    sh '''
+                    # Unset TLS-related environment variables before down
+                    unset DOCKER_TLS_VERIFY
+                    unset DOCKER_HOST
+                    unset DOCKER_CERT_PATH
+                    
+                    docker-compose down
+                    '''
                 }
             }
         }
