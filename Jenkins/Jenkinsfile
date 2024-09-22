@@ -1,23 +1,11 @@
 pipeline {
-    agent { 
-        node {
-            label 'docker-agent-python'
-            }
-      }
-    stages {
-        stage('Install Docker Compose') {
-            steps {
-                script {
-                    // Install Docker Compose if it's not available
-                    sh '''
-                    if ! [ -x "$(command -v docker-compose)" ]; then
-                        curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                        chmod +x /usr/local/bin/docker-compose
-                    fi
-                    '''
-                }
-            }
+    agent {
+        docker {
+            image 'docker/compose:1.29.2'  // Use a Docker image with Docker Compose
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Bind Docker socket
         }
+    }
+    stages {
         stage('Checkout Code') {
             steps {
                 checkout scm
@@ -27,6 +15,7 @@ pipeline {
             steps {
                 script {
                     dir('Task3') {
+                        // Build and run Docker Compose services
                         sh 'docker-compose up -d --build'
                     }
                 }
@@ -37,6 +26,7 @@ pipeline {
         always {
             script {
                 dir('Task3') {
+                    // Stop and remove the containers after the pipeline
                     sh 'docker-compose down'
                 }
             }
