@@ -9,8 +9,10 @@ pipeline {
         stage('Build and Run Containers') {
             steps {
                 script {
-                    // Build and run the containers using Docker Compose
-                    sh 'docker-compose up -d --build'
+                    // Navigate to the Task3 folder and run Docker Compose
+                    dir('Task3') {
+                        sh 'docker-compose up -d --build'
+                    }
                 }
             }
         }
@@ -18,8 +20,10 @@ pipeline {
     post {
         always {
             script {
-                // Clean up containers after pipeline completes
-                sh 'docker-compose down'
+                // Navigate to the Task3 folder and clean up containers after the pipeline completes
+                dir('Task3') {
+                    sh 'docker-compose down'
+                }
             }
         }
     }
