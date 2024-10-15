@@ -1,3 +1,6 @@
+## Status: Work in Progress 🚧
+This project is currently under development.
+
 # Deploying Flask App using Jenkins and Docker
 
 This repository demonstrates how to deploy a Flask application and a MariaDB container using Jenkins and Docker. The pipeline will automate the deployment process, ensuring that both the Flask app and the database are correctly set up and linked.
